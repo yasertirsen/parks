@@ -3,7 +3,6 @@ package com.example.parks.service;
 import com.example.parks.exceptions.EmailExistsException;
 import com.example.parks.exceptions.UserNotFoundException;
 import com.example.parks.exceptions.UsernameExistsException;
-import com.example.parks.jwt.JWTTokenProvider;
 import com.example.parks.model.NotificationEmail;
 import com.example.parks.model.User;
 import com.example.parks.model.UserPrincipal;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,8 +26,6 @@ import java.util.UUID;
 
 import static com.example.parks.constant.ErrorConstants.EMAIL_ALREADY_EXISTS;
 import static com.example.parks.constant.ErrorConstants.USERNAME_ALREADY_EXISTS;
-import static com.example.parks.constant.SecurityConstants.EXPIRATION_TIME;
-import static com.example.parks.model.Role.ROLE_ADMIN;
 import static com.example.parks.model.Role.ROLE_USER;
 
 @Service
