@@ -15,4 +15,5 @@ public class ErrorConstants {
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
     public static final String USERNAME_ALREADY_EXISTS = "Username already exists";
     public static final String ERROR_PARSING_MODULES = "An error has occurred while trying to parse course modules";
+    public static final String ERROR_PARSING_PARK_WEBPAGE = "Error parsing park webpage";
 }

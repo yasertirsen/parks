@@ -18,5 +18,8 @@ public class Facility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String facility;
-    private Long parkId;
+
+    public Facility(String facility) {
+        this.facility = facility;
+    }
 }

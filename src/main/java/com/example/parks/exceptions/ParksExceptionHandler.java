@@ -1,5 +1,6 @@
 package com.example.parks.exceptions;
 
+import com.example.parks.constant.ErrorConstants;
 import com.example.parks.model.HttpCustomResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -11,19 +12,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 
-import static com.example.parks.constant.ErrorConstants.EMAIL_ALREADY_EXISTS;
-import static com.example.parks.constant.ErrorConstants.INTERNAL_SERVER_ERROR_MSG;
-import static com.example.parks.constant.ErrorConstants.INVALID_CREDENTIALS;
-import static com.example.parks.constant.ErrorConstants.INVALID_DATA_FORMAT;
-import static com.example.parks.constant.ErrorConstants.METHOD_IS_NOT_ALLOWED;
-import static com.example.parks.constant.ErrorConstants.NOT_ENOUGH_PERMISSION;
-import static com.example.parks.constant.ErrorConstants.SERVER_COULD_NOT_BE_REACH;
+import static com.example.parks.constant.ErrorConstants.*;
 import static com.example.parks.constant.ErrorConstants.UNEXPECTED_VALUE;
 import static com.example.parks.constant.ErrorConstants.USERNAME_ALREADY_EXISTS;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
@@ -31,6 +25,11 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 public class ParksExceptionHandler {
+
+    @ExceptionHandler(ParsingException.class)
+    public ResponseEntity<HttpCustomResponse> parsingException() {
+        return createHttpResponse(BAD_REQUEST, ERROR_PARSING_PARK_WEBPAGE);
+    }
 
     @ExceptionHandler(UsernameExistsException.class)
     public ResponseEntity<HttpCustomResponse> usernameExistsException() {
