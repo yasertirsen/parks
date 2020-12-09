@@ -31,10 +31,27 @@ public class Playground {
     private String phone;
     private String parkRanger;
     private String surfaceType;
-    private boolean toilets;
-    private boolean disabledToilets;
-    private boolean babyChanging;
-    private boolean drinkingWater;
-    private boolean disabledParking;
-    private boolean seating;
+    private String toilets;
+    private String disabledToilets;
+    private String babyChanging;
+    private String drinkingWater;
+    private String disabledParking;
+    private String seating;
+
+    public Playground(String name, String type, String openingHours, Address address, String email, String phone, String parkRanger, String surfaceType, String toilets, String disabledToilets, String babyChanging, String drinkingWater, String disabledParking, String seating) {
+        this.name = name;
+        this.type = type;
+        this.openingHours = openingHours;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.parkRanger = parkRanger;
+        this.surfaceType = surfaceType;
+        this.toilets = toilets;
+        this.disabledToilets = disabledToilets;
+        this.babyChanging = babyChanging;
+        this.drinkingWater = drinkingWater;
+        this.disabledParking = disabledParking;
+        this.seating = seating;
+    }
 }

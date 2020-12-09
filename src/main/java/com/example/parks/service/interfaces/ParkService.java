@@ -1,6 +1,7 @@
 package com.example.parks.service.interfaces;
 
 import com.example.parks.model.Park;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -8,9 +9,11 @@ public interface ParkService {
 
     Park add(Park park);
 
-    List<Park> getAllParks();
+    List<Park> getAll();
 
-    Park getPark(String name);
+    Park get(String name);
 
     Park update(Park park);
+
+    ResponseEntity<String> delete(Long id);
 }

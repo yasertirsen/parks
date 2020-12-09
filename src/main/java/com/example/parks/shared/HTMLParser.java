@@ -4,6 +4,9 @@ import com.example.parks.exceptions.ParsingException;
 import com.example.parks.model.Address;
 import com.example.parks.model.Facility;
 import com.example.parks.model.Park;
+import com.example.parks.repository.AddressRepository;
+import com.example.parks.repository.FacilityRepository;
+import com.example.parks.repository.ParkRepository;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -12,26 +15,36 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.rmi.runtime.Log;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hibernate.id.SequenceMismatchStrategy.LOG;
-
 @Component
 public class HTMLParser {
 
-    private List<Park> parks = new ArrayList<>();
-    private List<String> parksNames = new ArrayList<>();
     private Park park;
     private Address address;
 
     private Logger logger = LoggerFactory.getLogger(HTMLParser.class);
 
+    private final ParkRepository parkRepository;
+    private final AddressRepository addressRepository;
+    private final FacilityRepository facilityRepository;
+
+    @Autowired
+    public HTMLParser(ParkRepository parkRepository, AddressRepository addressRepository, FacilityRepository facilityRepository) {
+        this.parkRepository = parkRepository;
+        this.addressRepository = addressRepository;
+        this.facilityRepository = facilityRepository;
+    }
+
     public List<Park> parseDublinParks() throws ParsingException {
+        List<Park> parks = new ArrayList<>();
+        List<String> parksNames = new ArrayList<>();
         final String url = "https://www.dublincity.ie/residential/parks/dublin-city-parks/visit-park";
         final int OK = 200;
         String parksEndpoint = "?keys=&facilities=All&page=";
@@ -87,7 +100,8 @@ public class HTMLParser {
         StringBuilder opTimes = new StringBuilder();
 
         try {
-            final Document document = Jsoup.connect(url).get();
+            logger.info(url);
+            final Document document = Jsoup.connect(url).timeout(60000).get();
 
             Element phone = document.selectFirst("div.field--label-hidden.field--type-telephone.field--name-field-location-phone.field " +
                     "> div.field__items > div.field__item > a");
@@ -132,7 +146,7 @@ public class HTMLParser {
                 facilities.add(new Facility(facility));
             }
 
-            park.setFacilities(facilities);
+            park.setFacilities(facilityRepository.saveAll(facilities));
 
             for(Element result: addresses) {
                 if(result.select("span").attr("class").equalsIgnoreCase("address-line1"))
@@ -151,7 +165,7 @@ public class HTMLParser {
                 }
             }
 
-            park.setAddress(address);
+            park.setAddress(addressRepository.save(address));
 
         } catch (IndexOutOfBoundsException ex) {
             logger.warn("Could NOT parse opening hours from " + url);
@@ -159,6 +173,12 @@ public class HTMLParser {
             ex.printStackTrace();
             throw new ParsingException("Error parsing " + url);
         }
+        try {
+            parkRepository.save(park);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return park;
     }
 
@@ -181,7 +201,10 @@ public class HTMLParser {
         return "Dublin";
     }
 
+    @Transactional
     public List<Park> parseDunLaoParks() throws ParsingException {
+        List<Park> parks = new ArrayList<>();
+        List<String> parksNames = new ArrayList<>();
         final String url = "https://www.dlrcoco.ie/en/parks-outdoors/playgrounds/";
 
         try {
@@ -237,16 +260,18 @@ public class HTMLParser {
                             address.setPostcode(getPostCode(address.getAddress2()));
                     }
                 }
-                park.setAddress(address);
+                park.setAddress(addressRepository.save(address));
 
                 getDunLaoOpTimesAndFacilities(endpoint);
             }
         } catch (HttpStatusException ex) {
             logger.warn("Could NOT find webpage for park: " + parkName);
+            parkRepository.save(park);
             return park;
         } catch (IOException e) {
             throw new ParsingException("Error parsing " + url);
         }
+        parkRepository.save(park);
         return park;
     }
 
@@ -288,7 +313,7 @@ public class HTMLParser {
                 for(String facility : splitFacilities) {
                     facilities.add(new Facility(facility.replaceFirst("^\\s*", "")));
                 }
-                park.setFacilities(facilities);
+                park.setFacilities(facilityRepository.saveAll(facilities));
             }
         } catch(Exception ex) {
             ex.printStackTrace();

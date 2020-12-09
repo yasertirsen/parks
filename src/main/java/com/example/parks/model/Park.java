@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Park {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Lob
     private String openingHours;
     @OneToOne
     @JoinColumn(referencedColumnName = "id", name = "addressId")
@@ -29,7 +31,7 @@ public class Park {
     private String email;
     private String phone;
     @OneToMany
-    @JoinColumn(referencedColumnName = "id", name = "facilityId")
+    @JoinColumn(referencedColumnName = "id", name = "parkId")
     private List<Facility> facilities;
 
 }

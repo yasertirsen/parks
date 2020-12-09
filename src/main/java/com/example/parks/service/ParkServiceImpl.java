@@ -3,6 +3,8 @@ package com.example.parks.service;
 import com.example.parks.model.Park;
 import com.example.parks.repository.ParkRepository;
 import com.example.parks.service.interfaces.ParkService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,17 +26,27 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
-    public List<Park> getAllParks() {
-        return null;
+    public List<Park> getAll() {
+        return parkRepository.findAll();
     }
 
     @Override
-    public Park getPark(String name) {
-        return null;
+    public Park get(String name) {
+        return parkRepository.findByName(name);
     }
 
     @Override
     public Park update(Park park) {
-        return null;
+        return parkRepository.save(park);
+    }
+
+    @Override
+    public ResponseEntity<String> delete(Long id) {
+        if(parkRepository.existsById(id)) {
+            parkRepository.deleteById(id);
+            return new ResponseEntity<>("Park with id " + id + " has been deleted", HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>("Park with id " + id + " cannot be found", HttpStatus.BAD_REQUEST);
     }
 }
