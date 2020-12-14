@@ -1,5 +1,6 @@
 package com.example.parks.service.interfaces;
 
+import com.example.parks.exceptions.ParkNotFoundException;
 import com.example.parks.model.Playground;
 import org.springframework.http.ResponseEntity;
 
@@ -12,7 +13,7 @@ public interface PlaygroundService {
 
     Playground get(String name);
 
-    Playground update(Playground playground);
+    Playground update(Playground playground) throws ParkNotFoundException;
 
     ResponseEntity<String> delete(Long id);
 }

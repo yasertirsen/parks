@@ -1,5 +1,6 @@
 package com.example.parks.service;
 
+import com.example.parks.exceptions.ParkNotFoundException;
 import com.example.parks.model.Park;
 import com.example.parks.repository.ParkRepository;
 import com.example.parks.service.interfaces.ParkService;
@@ -36,8 +37,10 @@ public class ParkServiceImpl implements ParkService {
     }
 
     @Override
-    public Park update(Park park) {
-        return parkRepository.save(park);
+    public Park update(Park park) throws ParkNotFoundException {
+        if(parkRepository.existsById(park.getId()))
+            return parkRepository.save(park);
+        throw new ParkNotFoundException();
     }
 
     @Override

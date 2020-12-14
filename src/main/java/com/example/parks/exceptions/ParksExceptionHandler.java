@@ -26,6 +26,11 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @RestControllerAdvice
 public class ParksExceptionHandler {
 
+    @ExceptionHandler(ParkNotFoundException.class)
+    public ResponseEntity<HttpCustomResponse> parkNotFoundException() {
+        return createHttpResponse(BAD_REQUEST, COULD_NOT_FIND_PARK_PLAYGROUND_TO_UPDATE);
+    }
+
     @ExceptionHandler(ParsingException.class)
     public ResponseEntity<HttpCustomResponse> parsingException() {
         return createHttpResponse(BAD_REQUEST, ERROR_PARSING_PARK_WEBPAGE);

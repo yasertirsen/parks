@@ -1,5 +1,6 @@
 package com.example.parks.controller;
 
+import com.example.parks.exceptions.ParkNotFoundException;
 import com.example.parks.model.Playground;
 import com.example.parks.service.interfaces.PlaygroundService;
 import com.example.parks.shared.XMLParser;
@@ -46,7 +47,7 @@ public class PlaygroundController {
     }
 
     @PutMapping("/update")
-    public Playground updatePlayground(@RequestBody Playground playground) {
+    public Playground updatePlayground(@RequestBody Playground playground) throws ParkNotFoundException {
         return playgroundService.update(playground);
     }
 
